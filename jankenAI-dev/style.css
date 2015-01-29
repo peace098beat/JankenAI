@@ -1,16 +1,19 @@
 * {
-  margin: 0;
-  padding: 0;
-  border: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
 }
-
 body {
-  font: 30px sans-serif;
+    margin: auto 0px;
+    /*font: 30px sans-serif;*/
 }
-.move-icon{
-    width:100px;
+.container {
+    margin-bottom: 20px;
 }
-#champion-move,
-#challenger-move{
-    min-height:100px;
+.move-icon {
+    width: 100px;
+}
+#champion-move, 
+#challenger-move {
+    min-height: 100px;
 }

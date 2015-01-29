@@ -14,8 +14,15 @@ function gameStart(challenger_no) {
 
     // result of challenger
     var result = judge(chg_move, cmp_move);
-    //var result =1;
 
+    // log ankle
+    logger.index ++;
+    logger.result.push(result);
+    logger.chg_move.push(chg_move);
+    logger.cmp_move.push(cmp_move);
+    console.log(logger.result);
+
+    // draw 
     draw(chg_move, cmp_move, result);
 
 }
@@ -27,6 +34,9 @@ function gameStart(challenger_no) {
  ****************************************************/
 function junkenAI(chg_move) {
 
+    // reutn variable
+    var cmp_move;
+
     // Algorizm is "Random"
     function randomAI() {
         rnd = Math.floor(Math.random() * 10);
@@ -35,7 +45,7 @@ function junkenAI(chg_move) {
         return move;
     }
 
-    function neverLoose(chg_move) {
+    function neverLoose(chg_move, mode) {
         //var move = 1;
         switch (chg_move) {
             case 1:
@@ -48,11 +58,36 @@ function junkenAI(chg_move) {
                 move = 2;
                 break;
         }
+
+        // trueで必ずかつ。falseで負ける。
+        if(mode == false){
+            move = (move+1)%3;
+            console.log(move);
+        }
         return move;
     }
 
     //return randomAI();
-    return neverLoose(chg_move);
+    // return neverLoose(chg_move);
+    
+    // AI
+    // 最初はランダムで初めて、後だしではないようにだます。
+    // fake_game_num = 10;
+    // battle_num = logger.index;
+    // if(battle_num < fake_game_num){
+    //     cmp_move = randomAI();
+    // }else{
+    //     cmp_move = neverLoose(chg_move, true);
+    // }
+
+    // その後、後だしに気がついたプレーヤが連続で同じ手を出したときに、わざと負ける。
+    // last_num = logger.chg_move.length;
+    // if(logger.chg_move[last_num] == logger.chg_move[last_num-1]){
+        // cmp_move = (neverLoose(chg_move, true) + 1)%3;
+    // }
+    //test
+    cmp_move = neverLoose(chg_move, false);
+    return cmp_move;
 }
 
 /***************************************************
@@ -128,12 +163,20 @@ function judge(chg_move, cmp_move) {
 }
 
 
+function logAnkle(){
+    self.index = 0;
+    self.result=[];
+    self.chg_move=[];
+    self.cmp_move= [];
+    console.log('No LOG, No Life');
+    return self;
+}
+
 /***************************************************
  *
  *  Get any DOMs
  *
  ****************************************************/
-// HTML内に<div id='janken-area'></div>を創る。
 var champion_move = [];
 if (document.getElementById('champion-move')) {
     champion_move = document.getElementById('champion-move');
@@ -164,3 +207,6 @@ cButton.addEventListener('click', function() {
 pButton.addEventListener('click', function() {
     gameStart(3);
 }, false);
+
+// save log data
+var logger = logAnkle();
