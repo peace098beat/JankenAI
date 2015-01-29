@@ -8,9 +8,9 @@ body {
   font: 30px sans-serif;
 }
 .move-icon{
-    width:60px;
+    width:100px;
 }
-#champion-area,
-#challenger-area{
+#champion-move,
+#challenger-move{
     min-height:100px;
 }
