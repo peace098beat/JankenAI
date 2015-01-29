@@ -4,7 +4,7 @@
 I create the strongest of "rock-paper-scissors AI".
 
 # ホームページ  
-http://fififactory.com/?p=41
+http://peace098beat.github.io/JankenAI/
 
 ## プロトタイプ
 
