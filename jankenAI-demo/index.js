@@ -51,8 +51,8 @@ function junkenAI(chg_move) {
         return move;
     }
 
-    //return randomAI();
-    return neverLoose(chg_move);
+    return randomAI();
+    // return neverLoose(chg_move);
 }
 
 /***************************************************

@@ -62,7 +62,6 @@ function junkenAI(chg_move) {
         // trueで必ずかつ。falseで負ける。
         if(mode == false){
             move = (move+1)%3;
-            console.log(move);
         }
         return move;
     }
