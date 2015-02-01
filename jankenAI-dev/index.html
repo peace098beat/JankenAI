@@ -13,8 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/bootstrap/css/bootstrap-theme.min.css">
     <!-- Latest compiled and minified CSS -->
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,35 +26,79 @@
 </head>
 
 <body>
-    <div id="champion-area" class="container">
-        <p>最強じゃんけんAI</p>
-        <div id="champion-move">---</div>
-    </div>
-
-    <div id="challenger-area" class="container">
-        <p>挑戦者</p>
-        <div id="challenger-move" class="">---</div>
-    </div>
-    
     <div class="container">
-        <div id="challenger-button">
-            <button id="junken-g" type="button" class="btn btn-default"><img class="move-icon" src="http://jsrun.it/assets/n/e/E/S/neESG.png">
-            </button>
-            <button id="junken-c" type="button" class="btn btn-default"><img class="move-icon" src="http://jsrun.it/assets/2/o/w/F/2owF2.png">
-            </button>
-            <button id="junken-p" type="button" class="btn btn-default"><img class="move-icon" src="http://jsrun.it/assets/p/a/O/Y/paOYD.png">
-            </button>
+        <h1>じゃんけんAIを作るその１</h1>
+        <div id="game-area" class="">
+            <p>最強じゃんけんAI</p>
+            <div id="champion-move">---</div>
+            <div id="champion-count">---</div>
+            <p>挑戦者</p>
+            <div id="challenger-move" class="">---</div>
+            <div id="challenger-count" class="">---</div>
+            <p>勝敗</p>
+            <div id="result-window">---</div>
+            <p>指し手</p>
+            <div id="challenger-button">
+                <button id="junken-g" type="button" class="btn btn-default"><img class="move-icon" src="http://jsrun.it/assets/n/e/E/S/neESG.png">
+                </button>
+                <button id="junken-c" type="button" class="btn btn-default"><img class="move-icon" src="http://jsrun.it/assets/2/o/w/F/2owF2.png">
+                </button>
+                <button id="junken-p" type="button" class="btn btn-default"><img class="move-icon" src="http://jsrun.it/assets/p/a/O/Y/paOYD.png">
+                </button>
+            </div>
         </div>
     </div>
     <div class="container">
-        <div id="result-window">---</div>
+        <div id="analys-area">
+            <!-- On rows -->
+            <table class="table">
+                <tr class="active">
+                    <td>指し手</td>
+                    <td>グー</td>
+                    <td>チョキ</td>
+                    <td>パー</td>
+                </tr>
+                <tr class="success">
+                    <td>挑戦者</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>9</td>
+                </tr>
+                <tr class="success">
+                    <td>AI</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>9</td>
+                </tr>
+            </table>
+            <table class="table">
+                <tr class="active">
+                    <td>勝敗</td>
+                    <td>勝ち</td>
+                    <td>負け</td>
+                    <td>あいこ</td>
+                </tr>
+                <tr class="success">
+                    <td>挑戦者</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>9</td>
+                </tr>
+                <tr class="success">
+                    <td>AI</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>9</td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="./js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- // <script src="js/bootstrap.min.js"></script> -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="./css/bootstrap/js/bootstrap.min.js"></script>
     <!-- user javascript -->
     <script type="text/javascript" src="index.js"></script>
 </body>

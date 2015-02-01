@@ -6,6 +6,8 @@
 body {
     margin: auto 0px;
     /*font: 30px sans-serif;*/
+	background-color: #ccc;
+
 }
 .container {
     margin-bottom: 20px;
@@ -16,4 +18,12 @@ body {
 #champion-move, 
 #challenger-move {
     min-height: 100px;
+}
+#game-area{
+	text-align: center;
+	background-color: #fff;
+
+}
+#analys-area{
+	
 }
