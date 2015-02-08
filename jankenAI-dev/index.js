@@ -16,7 +16,7 @@ function gameStart(challenger_no) {
     var result = judge(chg_move, cmp_move);
 
     // log ankle
-    logger.index ++;
+    logger.index++;
     logger.chg_move.push(chg_move);
     logger.cmp_move.push(cmp_move);
     logger.setResult(result);
@@ -24,6 +24,9 @@ function gameStart(challenger_no) {
 
     // html draw 
     draw(chg_move, cmp_move, result);
+    tableData = [["指し手", "グー", "チョキ", "パー"]];
+    tableData.push(["挑戦者", logger.win_num, logger.lose_num, logger.draw_num]);
+    plotTable(tableData);
 
 }
 
@@ -126,6 +129,33 @@ function draw(chg_move, cmp_move, result) {
  * analyser
  *
  ****************************************************/
+function plotTable(tableData) {
+    // プロットするdiv要素
+    // <div id ="table"></div>
+    // var tableText=[["人", "勝ち", "負け", "あいこ"]];
+    // tableText.push([1,2,3,4]);
+    // tableText.push([1,2,3,4]);
+
+
+
+    // tableText.push(["総計", sum[0], sum[1], sum[2]]);
+    var tableText = tableData;
+    var rows = [];
+    var table = document.createElement("table");
+    table.classList.add("table");
+    for (i = 0; i < tableText.length; i++) {
+        //行の追加
+        rows.push(table.insertRow(-1));
+        for (j = 0; j < 4; j++) {
+            //追加した行にせるを追加
+            cell = rows[i].insertCell(-1);
+            cell.appendChild(document.createTextNode(tableText[i][j]));
+        }
+    }
+    document.getElementById('table').appendChild(table);
+    document.getElementById('table').removeChild('table');
+}
+
 
 
 
@@ -143,31 +173,31 @@ function draw(chg_move, cmp_move, result) {
 *   @draw_num:   int:  挑戦者のあいこ数
 *
  ****************************************************/
-function logAnkle(){
+function logAnkle() {
     console.log('No LOG, No Life');
     self.index = 0;
-    self.chg_move=[0];
-    self.cmp_move= [0];
-    self.result=[0];
+    self.chg_move = [0];
+    self.cmp_move = [0];
+    self.result = [0];
     self.win_num = 0;
     self.lose_num = 0;
     self.draw_num = 0;
 
-    self.setResult = function(result){
+    self.setResult = function(result) {
 
-        self.result.push=result;
-        
-        if(result == 1){
-            self.win_num ++;
-        }else if(result == -1){
-            self.lose_num ++;
-        }else if(result == 0){
-            self.draw_num ++;
+        self.result.push = result;
+
+        if (result == 1) {
+            self.win_num++;
+        } else if (result == -1) {
+            self.lose_num++;
+        } else if (result == 0) {
+            self.draw_num++;
         }
     }
 
-    self.debuglog = function(flg){
-        if (flg == true){
+    self.debuglog = function(flg) {
+        if (flg == true) {
             console.log('_index_')
             console.log(self.index);
             // console.log('_challenger move_');
@@ -177,7 +207,7 @@ function logAnkle(){
             console.log('__lose num__');
             console.log(self.lose_num);
             console.log('__draw num__');
-            console.log(self.draw_num);        
+            console.log(self.draw_num);
         }
     }
 
