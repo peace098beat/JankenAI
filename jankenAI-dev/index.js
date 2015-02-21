@@ -136,8 +136,6 @@ function plotTable(tableData) {
     // tableText.push([1,2,3,4]);
     // tableText.push([1,2,3,4]);
 
-
-
     // tableText.push(["総計", sum[0], sum[1], sum[2]]);
     var tableText = tableData;
     var rows = [];
@@ -152,8 +150,10 @@ function plotTable(tableData) {
             cell.appendChild(document.createTextNode(tableText[i][j]));
         }
     }
-    document.getElementById('table').appendChild(table);
-    document.getElementById('table').removeChild('table');
+    p = document.getElementById('table')
+    c = document.getElementById('analys-area')
+    p.removeChild(c)
+    // document.getElementById('table').appendChild(table);
 }
 
 
