@@ -9,7 +9,7 @@ from flask import jsonify  # Ajax
 # css
 from flask_bootstrap import Bootstrap
 # user module
-from umod.user_module import *
+# from umod.user_module import *
 
 #########################################################################
 #
