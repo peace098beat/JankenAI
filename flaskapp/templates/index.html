@@ -35,13 +35,17 @@
 {% block scripts %}
     <!-- 親を継承 -->
     {{ super() }}
-    <script type=text/javascript>
+    <script>
   		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  		console.log($SCRIPT_ROOT);
 	</script>
     <script>
     	$(function(){
 			var pn = 0;
     		$('#ajax').click(function(){
+		  		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  				console.log($SCRIPT_ROOT);
+    			
     			$.getJSON($SCRIPT_ROOT + '/_ajax_getJSON', {
     				a: parseInt(pn),
     			}, function(data){
