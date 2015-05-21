@@ -141,10 +141,7 @@ def ajax_getJSON():
     inc = arg + 1
     dec = arg - 1
 
-    ret = dict(inc=inc, dec=dec)
-    ret_json = jsonify(result=ret)
-
-    return ret_json
+    return jsonify(result=dict(inc=inc, dec=dec))
 
 
 #########################################################################

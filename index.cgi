@@ -6,3 +6,4 @@ cgitb.enable()
 from wsgiref.handlers import CGIHandler
 from flaskapp.flaskr import app
 CGIHandler().run(app)
+

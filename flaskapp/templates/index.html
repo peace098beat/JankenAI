@@ -1,227 +1,163 @@
 <!-- 
 
-	index.html
-	コンテンツ要素のテンプレート
+  index.html
+  コンテンツ要素のテンプレート
 
-	継承元: layout.html
-	描画部: content
+  継承元: layout.html
+  描画部: content
 
-	CSS: bootstrap
+  CSS: bootstrap
  -->
-
-
 <!-- 親となるテンプレートを継承 -->
 {% extends "layout.html" %}
-
 <!-- contents -->
 {% block content %}
-
 <div class="container">
   <!-- <canvas id='c'></canvas> -->
   <p>Canvasサンプル</p>
   <p>Canvasを利用するために、javascriptを設置する。htmlファイル内外は問わないが、html内の方が管理は楽</p>
-  
-   <p>Ajaxサンプル</p>
+  <p>Ajaxサンプル</p>
   <button id='ajax'><span>Ajax</span><span id='ajax-ret'></span></button>
-  
-  <p>じゃんけん</p>
+  <h3>じゃんけん</h3>
   <p>challenger</p>
-  <button id='btn-clg-hand-g'><span>g</span><span id='ajax-ret'></span></button>
-  <button id='btn-clg-hand-c'><span>c</span><span id='ajax-ret'></span></button>
-  <button id='btn-clg-hand-p'><span>p</span><span id='ajax-ret'></span></button>
+  <button id='btn-clg-hand-g' onclick="clickClg('g')"><span>g</span></button>
+  <button id='btn-clg-hand-c' onclick="clickClg('c')"><span>c</span></button>
+  <button id='btn-clg-hand-p' onclick="clickClg('p')"><span>p</span></button>
   <p>janken AI</p>
   <p id='jAI-hand'></p>
-
+  <p>結果</p>
+  <p id='battle-result'></p>
 </div>
 {% endblock content %}
-
-
 <!-- scripts -->
 {% block scripts %}
-    <!-- 親を継承 -->
-    {{ super() }}
-    <script>
-  		SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-  		console.log(SCRIPT_ROOT);
-	</script>
-    <script>
-    	$(function(){
-			var pn = 0;
-    		$('#ajax').click(function(){
+<!-- 親を継承 -->
+{{ super() }}
+<script>
+/*********************************/
+/* グローバル変数
+/*********************************/
+g = {};
+g.clg_history = 'gcp';
+g.jAI_next_hand = 'e'
+g.hands_dict = {
+  1: 'g',
+  2: 'c',
+  3: 'p'
+}
+g.hands_dict_inv = {
+  'g': 1,
+  'c': 2,
+  'p': 3
+}
+g.result_dict = {
+  2: 'win',
+  1: 'lose',
+  0: 'draw'
+}
 
-		  		// SCRIPT_ROOT = 'JankenAI';
-    			
-    			$.getJSON(SCRIPT_ROOT + '/_ajax_getJSON', {
-    				a: parseInt(pn),
-    			}, function(data){
-    				// debug
-    				$("#ajax-ret").text(data.result.inc);
-    				pn = data.result.inc;
-    			})
-    		});
-    	});
-    </script>
-    <!-- 以下はDEMO用のjavascript -->
-	<script>
-		// **************************************************************
-		// 
-		// デモ用のcanvasアニメーションスクリプト
-		// 
-		// **************************************************************
-		var $id = function(id) { return document.getElementById(id); };
+function judge(i_clg_hand, i_jAI_hand) {
+  // 面倒なので値を短くする。
+  clg = i_clg_hand;
+  jai = i_jAI_hand;
+  jn = (clg - jai + 3) % 3;
+  // console.log(jn, g.result_dict[jn])
+  return jn
+}
 
-		// 定数
-		var FPS             = 60;
-		var SCREEN_WIDTH    = innerWidth*0.7;
-		var SCREEN_WIDTH    = 640;
-		var SCREEN_HEIGHT   = innerHeight*0.7;
-		var SCREEN_HEIGHT   = 480;
-		var CIRCLE_RADIUS   = 30;
-		var CIRCLE_MAX_NUM  = 15;
-		var CIRCLE_PURSUIT_RATE = 0.25;  // 収束率
+function jAI_NextHand(s_clg_hand) {
+  // g.jAI_next_hand = 'g'
+  old_h = g.jAI_next_hand;
+  ppm_api(s_clg_hand);
 
-		// グローバル
-		var global = {};
-		global.context      = null;
-		global.circleList   = [];
-		global.touchX       = null;
-		global.touchY       = null;
+  new_h = g.jAI_next_hand;
+  console.log('old, new');
+  console.log(old_h, new_h);
+}
 
-		window.onload = function()
-		{
-		    init();
-		    run();
-		};
+function draw(s_clg_hand, s_jAI_hand, s_judge_result) {
+  $("#jAI-hand").text(s_jAI_hand);
+  $("#battle-result").text(s_judge_result);
+  // console.log(s_clg_hand, s_jAI_hand, s_judge_result);
+};
 
-		var init = function()
-		{
-		    var canvas = $id("c");
-		    canvas.width = SCREEN_WIDTH;
-		    canvas.height= SCREEN_HEIGHT;
-		    global.context = canvas.getContext("2d");
-		    
-		    // Circle を生成
-		    for (var i=0; i<CIRCLE_MAX_NUM; ++i)
-		    {
-		        global.circleList.push(new Circle(
-		            Math.random() * SCREEN_WIDTH,
-		            Math.random() * SCREEN_HEIGHT,
-		            "hsla(" + (360/CIRCLE_MAX_NUM)*i +  ", 75%, 50%, 0.75)"
-		        ));
-		    }
-		    // 1個前に生成された Circle を Target としてセット
-		    for (var i=1,len=global.circleList.length; i<len; ++i)
-		    {
-		        global.circleList[i].target = global.circleList[i-1];
-		    }
-		    
-		    // Canvas にマウスイベントを登録
-		    canvas.addEventListener("mousemove", updateMousePos, false); // マウス移動時イベント
-		    canvas.addEventListener("mouseout", resetTouchPos, false); // マウスが画面外に出た際のイベント
-		    
-		    // Canvas にタッチ時のイベントを登録
-		    canvas.addEventListener("touchmove", updateTouchPos, false);// タッチ移動時イベント
-		    canvas.addEventListener("touchend", resetTouchPos, false);  // タッチ終了時イベント
-		};
-
-		var run = function()
-		{
-		    var _run = function()
-		    {
-		        update();
-		        draw();
-		        
-		        setTimeout(_run, 1000.0/FPS);
-		    };
-		    
-		    setTimeout(_run, 1000.0/FPS);
-		};
-
-		var update = function()
-		{
-		    for (var i=0,len=global.circleList.length; i<len; ++i)
-		    {
-		        global.circleList[i].update();
-		    }
-		};
-
-		var draw = function()
-		{
-		    var ctx = global.context;
-		    ctx.fillStyle = "black";
-		    ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		    
-		    // 円を描画
-		    ctx.save();
-		    ctx.globalCompositeOperation = "lighter";
-		    for (var i=0,len=global.circleList.length; i<len; ++i)
-		    {
-		        global.circleList[i].draw(ctx);
-		    }
-		    ctx.restore();
-		};
+function clickClg(h) {
+  // 今回の結果の格納(文字列)
+  s_clg_hand = h;
+  s_jAI_hand = g.jAI_next_hand;
+  // 今回の結果の格納(整数型)
+  i_clg_hand = g.hands_dict_inv[s_clg_hand];
+  i_jAI_hand = g.hands_dict_inv[s_jAI_hand];
 
 
-		/**
-		 * Circle クラス
-		 */
-		var Circle = function(x, y, color)
-		{
-		    this.x = x || 0;
-		    this.y = y || 0;
-		    this.color = color || "white";
-		    this.target= null;
-		};
 
-		Circle.prototype = {
-		    x: null,
-		    y: null,
-		    color: null,
-		    target: null,
-		    
-		    update: function()
-		    {
-		        if (this.target) {
-		            this.x += (this.target.x-this.x)*CIRCLE_PURSUIT_RATE;
-		            this.y += (this.target.y-this.y)*CIRCLE_PURSUIT_RATE;
-		        }
-		        else if (global.touchX && global.touchY){
-		            this.x += (global.touchX-this.x)*CIRCLE_PURSUIT_RATE;
-		            this.y += (global.touchY-this.y)*CIRCLE_PURSUIT_RATE;
-		        }
-		    },
-		    
-		    draw: function(ctx)
-		    {
-		        ctx.fillStyle = this.color;
-		        ctx.beginPath();
-		        ctx.arc(this.x, this.y, CIRCLE_RADIUS, 0, Math.PI*2, false);
-		        ctx.fill();
-		        ctx.closePath();
-		    }
-		};
+  // 非同期でAIの次の手を呼び出しておく
+  jAI_NextHand(s_clg_hand);
 
-		var updateMousePos = function(e)
-		{
-		    var rect = e.target.getBoundingClientRect();
-		    global.touchX = e.clientX - rect.left;
-		    global.touchY = e.clientY - rect.top;
-		};
+  // その間に判定をジャッジ
+  i_judge_result = judge(i_clg_hand, i_jAI_hand);
+  s_judge_result = g.result_dict[i_judge_result];
+  // 結果の表示
+  draw(s_clg_hand, s_jAI_hand, s_judge_result)
 
-		var updateTouchPos = function(e)
-		{
-		    var t = e.touches[0];
-		    global.touchX = t.pageX;
-		    global.touchY = t.pageY;
-		    e.preventDefault();
-		};
+  console.log(s_clg_hand, s_jAI_hand, s_judge_result);
 
-		var resetTouchPos = function()
-		{
-		    global.touchX = null;
-		    global.touchY = null;
-		};
+  g.clg_history += s_clg_hand;
+};
 
-	</script>
+/*********************************/
+/* じゃんけんAPIのテスト */
+/* 使わない */
+/*********************************/
+function ppm_api(h) {
+  console.log('SEND API:' + h);
+  $.getJSON('http://fififactory.sakura.ne.jp/API/index.cgi?player=ggccppcgpcpg', {
+    // プレーヤの過去の手。アルゴリズムを問い合わせる順番に注意。
+    // いわゆる今回の手は含めておくる。
+    player: g.clg_history + h,
+  }, function(data) {
+    console.log('Ajax API Return');
+    g.jAI_next_hand = data[0].next_hand;
+    console.log('Next: ' + g.jAI_next_hand);
+    console.log(data[2].history)
+  })
+};
+
+
+/*********************************/
+/* じゃんけんAPIのテスト */
+/* 使わない */
+/*********************************/
+$(function() {
+  $('#None').click(function() {
+    $.getJSON('http://fififactory.sakura.ne.jp/API/index.cgi?player=ggccppcgpcpg', {
+        player: 'ggccppcgpcgp',
+      }, function(data) {
+        console.log('JankenAPI Return')
+        console.log(data)
+        console.log(data[0].next_hand)
+        next_hand = data[0].next_hand;
+
+      }) //getJson
+  }); // click
+}); // 無名関数
+
+
+/*********************************/
+/* ajaxのテストパターン
+/*********************************/
+$(function() {
+  var pn = 0;
+  $('#ajax').click(function() {
+    $.getJSON($SCRIPT_ROOT + '/_ajax_getJSON', {
+      a: parseInt(pn),
+    }, function(data) {
+      // debug
+      $("#ajax-ret").text(data.result.inc);
+      pn = data.result.inc;
+      console.log('ajax return')
+    })
+  });
+});
+</script>
 {%- endblock scripts %}
-

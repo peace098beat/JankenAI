@@ -33,6 +33,7 @@
 
             <!-- scripts -->
             {% block scripts %}
+                <script>$SCRIPT_ROOT = {{ request.script_root | tojson | safe}};</script>
                 <script src="{{ bootstrap_find_resource('jquery.js', cdn='jquery') }}"></script>
                 <script src="{{ bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap') }}"></script>
             {%- endblock scripts %}
